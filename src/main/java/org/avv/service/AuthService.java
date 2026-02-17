@@ -17,6 +17,8 @@ import java.time.LocalDateTime;
 @RequiredArgsConstructor
 public class AuthService {
 
+    public static final String KEY = "3x-ui=";
+    public static final String HEADER_NAME = "set-cookie";
     private final SessionRepository sessionRepository;
     private final FeignAuthClient feignAuthClient;
 
@@ -37,16 +39,18 @@ public class AuthService {
             }
         }
 
-        ResponseEntity<String> response = feignAuthClient.login(LoginDto.builder()
-                                                                  .username(username)
-                                                                  .password(password)
-                                                                  .build());
-        List<String> cookies = response.getHeaders().getValuesAsList("set-cookie");
+        ResponseEntity<String> response = feignAuthClient.login(
+            LoginDto.builder()
+                .username(username)
+                .password(password)
+                .build()
+        );
 
+        List<String> cookies = response.getHeaders().getValuesAsList(HEADER_NAME);
         Session newSession = (session == null) ? new Session() : session;
         newSession.setCookie(cookies.get(0));
         newSession.setUserId(userId);
-        newSession.setSessionId(extractToken(cookies, "3x-ui="));
+        newSession.setSessionId(extractToken(cookies, KEY));
         newSession.setCreatedAt(LocalDateTime.now());
         sessionRepository.save(newSession);
 

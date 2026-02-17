@@ -16,6 +16,8 @@ import org.telegram.telegrambots.updatesreceivers.DefaultBotSession;
 @RequiredArgsConstructor
 public class TelegramBotService extends TelegramLongPollingBot {
 
+    public static final String LOGIN_TO_PANEL = "startVpnBot";
+    public static final String FORMAT = "Привет %s! Я твой бот.";
     private final MessageService messageService;
     private final AuthService authService;
     private static final String SUCCESS_MESSAGE = "Авторизация успешно пройдена";
@@ -46,12 +48,11 @@ public class TelegramBotService extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         Long userId = messageService.saveMessage(update);
         String chatId = update.getMessage().getChatId().toString();
-        String messageText = String.format("Привет %s! Я твой бот.",
-                                           update.getMessage().getFrom().getFirstName());
+        String messageText = String.format(FORMAT, update.getMessage().getFrom().getFirstName());
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             String message = update.getMessage().getText();
-            if ("startVpnBot".equals(message)) {
+            if (LOGIN_TO_PANEL.equals(message)) {
                 Session session = authService.login(userId);
                 sendTextMessage(chatId, SUCCESS_MESSAGE);
             } else {

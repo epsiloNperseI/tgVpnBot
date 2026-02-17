@@ -30,5 +30,5 @@ feign:
 
 api:
   base-url: ${3UI_BASE_URL}
-  username: ${TG_BOT_USERNAME}
-  password: ${TG_BOT_PASSWORD}
+  username: ${3UI_USERNAME}
+  password: ${3UI_PASSWORD}
