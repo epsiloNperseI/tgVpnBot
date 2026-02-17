@@ -20,10 +20,10 @@ public class AuthService {
     private final SessionRepository sessionRepository;
     private final FeignAuthClient feignAuthClient;
 
-    @Value("${telegram.bot.username}")
+    @Value("${api.username}")
     private String username;
 
-    @Value("${telegram.bot.password}")
+    @Value("${api.password}")
     private String password;
 
     @Transactional
@@ -57,16 +57,13 @@ public class AuthService {
     private String extractToken(List<String> cookies, String key) {
         for (String cookie : cookies) {
             if (cookie.startsWith(key)) {
-                // Начало значения токена после ключа
                 int valueStart = key.length();
-                // Конец значения токена до ';'
                 int semicolonIndex = cookie.indexOf(';', valueStart);
                 return (semicolonIndex != -1)
                     ? cookie.substring(valueStart, semicolonIndex)
                     : cookie.substring(valueStart);
             }
         }
-        // Если ключ не найден, возвращаем null
         return null;
     }
 }

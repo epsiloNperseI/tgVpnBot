@@ -2,7 +2,6 @@ package org.avv.service;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.avv.dto.InboundDto;
 import org.avv.entity.Session;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -19,8 +18,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
 
     private final MessageService messageService;
     private final AuthService authService;
-    private final CreateDtoInboundService createDtoInboundService;
-    private final InboundService inboundService;
+    private static final String SUCCESS_MESSAGE = "Авторизация успешно пройдена";
 
     @PostConstruct
     public void init() throws TelegramApiException {
@@ -55,8 +53,7 @@ public class TelegramBotService extends TelegramLongPollingBot {
             String message = update.getMessage().getText();
             if ("startVpnBot".equals(message)) {
                 Session session = authService.login(userId);
-                InboundDto dto = createDtoInboundService.createInboundDto();
-                inboundService.createInbound(dto, session);
+                sendTextMessage(chatId, SUCCESS_MESSAGE);
             } else {
                 sendTextMessage(chatId, messageText);
 
