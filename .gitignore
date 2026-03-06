@@ -1,3 +1,8 @@
 .idea/
 *.iml
 out/
+.env
+target/
+src/main/resources/cert.crt
+postgresql/
+.DS_Store

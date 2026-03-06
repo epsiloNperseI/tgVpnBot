@@ -1,9 +1,7 @@
-version: "2"
-
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: vpn
+    container_name: vpn-postgres
     volumes:
       - ./postgresql/data:/var/lib/postgresql/data
       - ./docker-init:/docker-entrypoint-initdb.d
@@ -12,3 +10,28 @@ services:
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: donivpn
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: vpn-app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/donivpn
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres
+      TG_BOT_USERNAME: ${TG_BOT_USERNAME}
+      TG_BOT_TOKEN: ${TG_BOT_TOKEN}
+      TG_BOT_PASSWORD: ${TG_BOT_PASSWORD}
+      XUI_BASE_URL: ${XUI_BASE_URL}
+      XUI_USERNAME: ${XUI_USERNAME}
+      XUI_PASSWORD: ${XUI_PASSWORD}
+    depends_on:
+      postgres:
+        condition: service_healthy
