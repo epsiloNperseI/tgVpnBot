@@ -1,0 +1,14 @@
+version: "2"
+
+services:
+  postgres:
+    image: postgres:latest
+    command: postgres -c 'max_connections=500'
+    volumes:
+      - ./postgresql/data/:/var/lib/postgresql/data
+      - ./scripts/:/docker-entrypoint-initdb.d
+    ports:
+      - "5433:5432" # Настройка нового порта хоста
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
