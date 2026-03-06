@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public interface FeignAuthClient {
 
     @Headers("Content-Type: application/json")
-    @RequestMapping(method = RequestMethod.GET, value = "/login")
+    @RequestMapping(method = RequestMethod.POST, value = "/login")
     ResponseEntity<String> login(@RequestBody LoginDto loginDto);
 
     @PostMapping("/panel/api/inbounds/add")
