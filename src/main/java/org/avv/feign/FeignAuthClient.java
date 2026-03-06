@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-@FeignClient(name = "authClient", url = "http://89.208.107.126:20044")
+@FeignClient(name = "authClient", url = "${api.base-url}")
 public interface FeignAuthClient {
 
     @Headers("Content-Type: application/json")
